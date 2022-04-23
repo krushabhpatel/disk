@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    label {
+
+      margin-left: 7em;
+      width: 140px;
+      padding: 3px;
+      color: #003366;
+    }
+
+    p {
+
+      color: #003366;
+      margin-left: 5.5em;
+      font-size: 20px;
+      font-weight: bold;
+
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>FCFS Algorithm Graph</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="favicon.ico" rel="icon">
+
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Jost:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
+    rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top header-inner-pages">
+    <div class="container d-flex align-items-center">
+
+      <h1 class="logo me-auto"><a href="#">Disk Scheduling</a></h1>
+
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a class="nav-link scrollto " href="index.html">
+              <h6>Home</h6>
+            </a></li>
+
+          <li class="dropdown"><a href="#">
+              <h6><span>Algorithms</span></h6>
+              <h6> <i class="bi bi-chevron-down"></i></h6>
+            </a>
+            <ul>
+              <li><a href="SCAN.html">SCAN</a></li>
+              <li><a href="LOOK.html">LOOK</a></li>
+              <li><a href="C-SCAN.html">C-SCAN</a></li>
+            </ul>
+          </li>
+
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+    </div>
+  </header><!-- End Header -->
+
+  <main id="main">
+
+    <!-- ======= Breadcrumbs ======= -->
+    <section id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <ol>
+          <li>Home</li>
+          <li>Algorithms</li>
+          <li>FCFS</li>
+          <li>Simulate</li>
+        </ol>
+        <h2>FCFS Disk Scheduling Algorithm</h2>
+
+      </div>
+    </section>
+
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+    <section>
+      <div style="width: auto;">
+        <div style="float: left; width: 40%">
+          <h3 style="color :#003366; margin-left:4em  ">Enter the Elements</h3>
+          <br>
+          <!-- ======= to enter values in array ======= -->
+          <label>Enter the queue : </label>
+          <input id="array" placeholder='Eg: "82 ,170 ,43 ,140 ,24"'>
+          <br><br>
+          <!-- ======= to enter head ======= -->
+          <label>Enter head(+ive) : </label> <input type="number" id="inputhead">
+          <br><br>
+
+          <!-- ======= calculate button ======= -->
+          <button class="btn btn-outline-dark" style=" margin-left:7em" type="button" name="button" onclick="int()">
+            Calculate
+          </button>
+          <br><br>
+          <p id="vv"></p>
+
+          <!-- =======to print error ======= -->
+          <p1
+            style="margin-left: 7em; background: rgb(238, 237, 237);border-radius: 10px;color: rgb(214, 21, 21);font-size: 20px;font-weight: bold;"
+            id="ERROR"></p1><br>
+          <p2 id="NOTE" style="margin-left:7em ; color: crimson; font-weight: bold"></p2>
+          <br>
+
+        </div>
+
+        <div id="myPlot" style="float: left; width: 60% "></div>
+      </div>
+
+    </section>
+
+    <script>
+      // complexity O(n)//
+      // validate the input values
+      function int() {
+
+        var arr = document.getElementById('array').value.split(",").map(Number);
+        let size = arr.length;
+        var head = document.getElementById('inputhead').value;
+        var C = 0;
+
+        // verify all the elements of an array
+        for (i = 0; i < size; i++) {
+
+          if (Number.isInteger(arr[i]) && arr[i] > 0 && head > 0) {
+
+            // if there are all postive ingters inputed in array and head
+            // then C=1
+            C = 1;
+          }
+          else {
+            // if there is invalid values inputed likw a,d,@,$,f,..
+            // then C=0
+            C = 0;
+            break;
+          }
+        }
+        //if C=0 then error messege will display
+        if (C == 0) {
+          document.getElementById("vv").innerHTML = " ";
+          document.getElementById("myPlot").innerHTML = " ";
+          document.getElementById("ERROR").innerHTML = "INVALID INPUT VALUES";
+          document.getElementById("NOTE").innerHTML = "Note :  All values should be positive integer.";
+        }
+        //if C=1 the FCFS & CHART  function will call
+        else {
+          FCFS();
+          CHART();
+          document.getElementById("ERROR").innerHTML = " ";
+          document.getElementById("NOTE").innerHTML = " ";
+        }
+      }
+
+      // complexity O(n)//
+      // gives FCFS Seek time //
+      function FCFS() {
+        var seek_count = 0;
+        var distance, cur_track;
+        var arr = document.getElementById('array').value.split(",").map(Number);
+        var head = document.getElementById('inputhead').value;
+        let size = arr.length;
+        
+        // loop all the values of an array
+        for (var i = 0; i < size; i++) {
+          cur_track = arr[i];
+
+          // calculate absolute distance
+          distance = Math.abs(cur_track - head);
+
+          // increase the total count
+          seek_count += distance;
+
+          // accessed track is now new head
+          head = cur_track;
+        }
+        // total seek time will be displayed
+        document.getElementById("vv").innerHTML = "Total  " +
+          "seek Time = " +
+          seek_count;
+      }
+
+
+
+      // its create a graph from input values
+      function CHART() {
+
+        var arr = document.getElementById('array').value.split(",").map(Number);
+        var head = document.getElementById('inputhead').value;
+        var xArray = [head];
+        var yArray = [0, -1, -2, -3, -4, -5, -6, -7, -8, -9];
+
+        // take values of arr and store it into xArray.
+        for (var i = 0; i < arr.length; i++) {
+
+          xArray.push(arr[i]);
+        }
+        // data of chart like it is gonna look
+        var data = [{
+          x: xArray,
+          y: yArray,
+          mode: "line"
+        }];
+        // layout where we define range of graph & title
+        var layout = {
+          yaxis: { range: [-10, 0], },
+          xaxis: { range: [0, 200], },
+
+          title: "FCFS GRAPH"
+        };
+
+        // plot a graph with data
+        Plotly.newPlot("myPlot", data, layout);
+
+      }
+    </script>
+
+
+
+    <div>
+      <footer id="footer">
+
+        <div class="container footer-bottom clearfix">
+          <div class="container">
+            <div class="col-lg-3 col-md-6 footer-links">
+              <h5>Our Social Networks</h5>
+
+              <div class="social-links mt-3">
+                <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>
+                <a href="#" class="facebook"><i class="bx bxl-facebook"></i></a>
+                <a href="#" class="instagram"><i class="bx bxl-instagram"></i></a>
+                <a href="#" class="google-plus"><i class="bx bxl-skype"></i></a>
+                <a href="#" class="linkedin"><i class="bx bxl-linkedin"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="credits">
+            <h6>Designed by G5-Team 6</h6>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+  <!-- End Footer -->
+
+</body>
+
+</html>
